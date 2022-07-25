@@ -8,6 +8,8 @@ namespace cslox.AST
 {
     internal class Parser
     {
+        private class ParseError : Exception { }
+
         private List<Token> tokens;
         private int current = 0;
 
@@ -16,87 +18,141 @@ namespace cslox.AST
             this.tokens = tokens;
         }
 
-        public Expr expression() {
-            return equality();
+        public Expr? parse() {
+            try
+            {
+                return expression();
+            }
+            catch (ParseError)
+            {
+                return null;
+            }
         }
 
-        public Expr equality()
+        private Expr? expression()
         {
-            Expr expr = comparison();
+            Expr? expr = equality();
+            while (match(new[] { TokenType.QMARK }))
+            {
+                Expr? trueBranch = expression();
+                consume(TokenType.COLON, $"Expected ':' but got '{peek().lexeme}'");
+                Expr? falseBranch = expression();
+                expr = new Ternary(expr, trueBranch, falseBranch);
+            }
+            return expr;
+        }
+
+        //private Expr expression() {
+        //    Expr expr = equality();
+        //    while (match(new[] { TokenType.COMMA }))
+        //    {
+        //        Token op = previous();
+        //        Expr right = equality();
+        //        expr = new Binary(expr, op, right);
+        //    }
+        //    return expr;
+        //}
+
+        private Expr? equality()
+        {
+            Expr? expr = comparison();
             while (match(new[] { TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL })) {
                 Token op = previous();
-                Expr right = comparison();
+                Expr? right = comparison();
                 expr = new Binary(expr, op, right);
             }
             return expr;
         }
 
-        public Expr comparison()
+        private Expr? comparison()
         {
-            Expr expr = term();
+            Expr? expr = term();
             while (match(new[] { TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL }))
             {
                 Token op = previous();
-                Expr right = term();
+                Expr? right = term();
                 expr = new Binary(expr, op, right);
             }
             return expr;
         }
 
-        public Expr term()
+        private Expr? term()
         {
-            Expr expr = factor();
+            Expr? expr = factor();
             while (match(new[] { TokenType.MINUS, TokenType.PLUS }))
             {
                 Token op = previous();
-                Expr right = factor();
+                Expr? right = factor();
                 expr = new Binary(expr, op, right);
             }
             return expr;
         }
 
-        public Expr factor()
+        private Expr? factor()
         {
-            Expr expr = unary();
+            Expr? expr = unary();
             while (match(new[] { TokenType.SLASH, TokenType.STAR }))
             {
                 Token op = previous();
-                Expr right = unary();
+                Expr? right = unary();
                 expr = new Binary(expr, op, right);
             }
             return expr;
         }
 
-        public Expr unary() {
-            Expr expr;
+        private Expr? unary() {
+            
             if (match(new[] { TokenType.BANG, TokenType.MINUS }))
             {
                 Token op = previous();
-                Expr right = unary();
-                expr = new Unary(op, right);
+                Expr? right = unary();
+                return new Unary(op, right);
             }
             else 
             {
-                expr = primary();
+                return primary();
             }
-            return expr;
         }
 
-        public Expr primary() {
-            Expr expr;
-            if (match(new[] { TokenType.NUMBER, TokenType.STRING, TokenType.TRUE, TokenType.FALSE, TokenType.NIL }))
+        private Expr? primary() {
+            if (match(new[] { TokenType.FALSE })) return new Literal(false);
+            if (match(new[] { TokenType.TRUE })) return new Literal(true);
+            if (match(new[] { TokenType.NIL })) return new Literal(null);
+            
+            if (match(new[] { TokenType.NUMBER, TokenType.STRING }))
             {
-                string lexeme = previous().lexeme;
-                expr = new Literal(lexeme);
-            }
-            else
-            {
-                match(new[] { TokenType.LEFT_PAREN });
-                expr = new Grouping(expression());
-                match(new[] { TokenType.RIGHT_PAREN });
+                return new Literal(previous().literal);
             }
 
-            return expr;
+            if (match(new[] { TokenType.LEFT_PAREN }))
+            {
+                Expr expr = expression();
+                consume(TokenType.RIGHT_PAREN, $"Expected ')' after expression, but got {peek().lexeme}");
+                return new Grouping(expr);
+            }
+            
+            error(peek(), $"Unhandled value, expected expression, but got '{peek().lexeme}'");
+            return null;
+        }
+
+        private void synchronize() {
+            advance();
+            while (!atEnd()) {
+                if (previous().type == TokenType.SEMICOLON) return;
+
+                switch (peek().type) {
+                    case TokenType.CLASS:
+                    case TokenType.FOR:
+                    case TokenType.FUN:
+                    case TokenType.IF:
+                    case TokenType.PRINT:
+                    case TokenType.RETURN:
+                    case TokenType.VAR:
+                    case TokenType.WHILE:
+                        return;
+                }
+                advance();
+            }
         }
 
         private bool match(TokenType[] types) {
@@ -108,6 +164,16 @@ namespace cslox.AST
                 }
             }
             return false;
+        }
+
+        private Token consume(TokenType type, string message) {
+            if (check(type)) return advance();
+            throw error(peek(), message);
+        }
+
+        private ParseError error(Token token, string message) {
+            Cslox.error(token, message);
+            return new ParseError();
         }
 
         private Token advance() { 

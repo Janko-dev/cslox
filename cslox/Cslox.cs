@@ -1,4 +1,5 @@
 ﻿using cslox.AST;
+using cslox.AST.AST_functions;
 using System.Text;
 
 namespace cslox
@@ -17,32 +18,6 @@ namespace cslox
             }
             else if (args.Length == 1) runFile(args[0]);
             else runPrompt();
-
-            //// pretty printer test
-            //Expr expression = new Binary(
-            //    new Unary(
-            //        new Token(TokenType.MINUS, "-", null, 1),
-            //        new Literal(123)),
-            //    new Token(TokenType.STAR, "*", null, 1),
-            //    new Grouping(
-            //        new Literal(45.231))
-            //);
-
-            //Console.WriteLine(new AstPrinter().print(expression));
-
-            //// Reverse polish notation printer test
-            //Expr expression2 = new Binary(
-            //    new Binary(
-            //        new Literal(1),
-            //        new Token(TokenType.PLUS, "+", null, 1),
-            //        new Literal(2)),
-            //    new Token(TokenType.STAR, "*", null, 1),
-            //    new Binary(
-            //        new Literal(4),
-            //        new Token(TokenType.MINUS, "-", null, 1),
-            //        new Literal(3)));
-
-            //Console.WriteLine(new RPNPrinter().print(expression2));
         }
 
         private static void runFile(string path) {
@@ -57,9 +32,7 @@ namespace cslox
             Console.WriteLine("Welcome to the REPL (Read, Evaluate, Print, Loop) environment");
             while (true) {
                 Console.Write("> ");
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                string line = Console.ReadLine();
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+                string? line = Console.ReadLine();
                 if (line == null) break;
                 run(line);
                 hadError = false;
@@ -75,12 +48,25 @@ namespace cslox
             }
             
             Parser parser = new Parser(tokens);
-            Expr expr = parser.expression();
+            Expr expr = parser.parse();
+            if (hadError) return;
+                
             Console.WriteLine(new AstPrinter().print(expr));
         }
 
         public static void error(int line, string message) {
             report(line, "", message);
+        }
+
+        public static void error(Token token, string message)
+        {
+            if (token.type == TokenType.EOF)
+            {
+                report(token.line, "at end", message);
+            }
+            else {
+                report(token.line, $"at '{token.lexeme}'", message);
+            }
         }
 
         private static void report(int line, string where, string message) {

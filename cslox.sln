@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cslox", "cslox\cslox.csproj", "{45E5E257-143F-4DC7-8AC9-927690D6F755}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASTGenerator", "ASTGenerator\ASTGenerator.csproj", "{823C23D5-D0A5-460A-A65D-FC6C994827A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASTGenerator", "ASTGenerator\ASTGenerator.csproj", "{823C23D5-D0A5-460A-A65D-FC6C994827A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

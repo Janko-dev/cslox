@@ -2,8 +2,8 @@ namespace cslox.AST
 {
     internal class Literal : Expr
     {
-        public object value;
-        public Literal(object value)
+        public object? value;
+        public Literal(object? value)
         {
             this.value = value;
         }

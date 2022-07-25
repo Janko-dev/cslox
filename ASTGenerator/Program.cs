@@ -7,8 +7,9 @@
         private static List<string> rules = new List<string>()
         {
             "Binary   : Expr left, Token op, Expr right",
+            "Ternary  : Expr cond, Expr trueBranch, Expr falseBranch",
             "Grouping : Expr expression",
-            "Literal  : object value",
+            "Literal  : object? value",
             "Unary    : Token op, Expr right",
         };
 

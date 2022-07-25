@@ -61,6 +61,8 @@ namespace cslox
                 case '-': addToken(TokenType.MINUS); break;
                 case '+': addToken(TokenType.PLUS); break;
                 case ';': addToken(TokenType.SEMICOLON); break;
+                case '?': addToken(TokenType.QMARK); break;
+                case ':': addToken(TokenType.COLON); break;
                 case '*': addToken(TokenType.STAR); break;
                 case '!': addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG); break;
                 case '=': addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL); break;

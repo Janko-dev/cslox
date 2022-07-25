@@ -15,6 +15,7 @@ namespace cslox
         LEFT_BRACE, RIGHT_BRACE,
         COMMA, DOT, MINUS, PLUS,
         SEMICOLON, SLASH, STAR,
+        QMARK, COLON,
         
         // one or two character tokens
         BANG, BANG_EQUAL, EQUAL, EQUAL_EQUAL,
