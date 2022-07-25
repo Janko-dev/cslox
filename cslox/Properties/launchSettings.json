@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "cslox runfile": {
+      "commandName": "Project",
+      "commandLineArgs": "testcode.cslox"
+    },
+    "cslox repl": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cslox", "cslox\cslox.csproj", "{45E5E257-143F-4DC7-8AC9-927690D6F755}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASTGenerator", "ASTGenerator\ASTGenerator.csproj", "{823C23D5-D0A5-460A-A65D-FC6C994827A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{45E5E257-143F-4DC7-8AC9-927690D6F755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45E5E257-143F-4DC7-8AC9-927690D6F755}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45E5E257-143F-4DC7-8AC9-927690D6F755}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45E5E257-143F-4DC7-8AC9-927690D6F755}.Release|Any CPU.Build.0 = Release|Any CPU
+		{823C23D5-D0A5-460A-A65D-FC6C994827A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{823C23D5-D0A5-460A-A65D-FC6C994827A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{823C23D5-D0A5-460A-A65D-FC6C994827A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{823C23D5-D0A5-460A-A65D-FC6C994827A1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A3A78523-3EE7-431E-AE57-294C34FDA1A4}
+	EndGlobalSection
+EndGlobal
