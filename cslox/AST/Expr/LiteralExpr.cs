@@ -1,13 +1,13 @@
 namespace cslox.AST
 {
-    internal class Literal : Expr
+    internal class LiteralExpr : Expr
     {
         public object? value;
-        public Literal(object? value)
+        public LiteralExpr(object? value)
         {
             this.value = value;
         }
-        public override R Accept<R>(Visitor<R> visitor)
+        public override R Accept<R>(ExprVisitor<R> visitor)
         {
             return visitor.VisitLiteralExpr(this);
         }

@@ -1,17 +1,17 @@
 namespace cslox.AST
 {
-    internal class Ternary : Expr
+    internal class TernaryExpr : Expr
     {
         public Expr cond;
         public Expr trueBranch;
         public Expr falseBranch;
-        public Ternary(Expr cond, Expr trueBranch, Expr falseBranch)
+        public TernaryExpr(Expr cond, Expr trueBranch, Expr falseBranch)
         {
             this.cond = cond;
             this.trueBranch = trueBranch;
             this.falseBranch = falseBranch;
         }
-        public override R Accept<R>(Visitor<R> visitor)
+        public override R Accept<R>(ExprVisitor<R> visitor)
         {
             return visitor.VisitTernaryExpr(this);
         }

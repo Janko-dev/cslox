@@ -7,7 +7,9 @@ namespace cslox
     internal class Cslox
     {
 
+        private static Interpreter interpreter = new Interpreter();
         private static bool hadError = false;
+        private static bool hadRunTimeError = false;
 
         static void Main(string[] args)
         {
@@ -25,6 +27,7 @@ namespace cslox
             Console.WriteLine($"Path: {path}");
             run(Encoding.Default.GetString(bytes));
             if (hadError) Environment.Exit(65);
+            if (hadRunTimeError) Environment.Exit(70);
         }
 
         private static void runPrompt()
@@ -43,15 +46,26 @@ namespace cslox
             Scanner scanner = new Scanner(source);
             List<Token> tokens = scanner.scanTokens();
 
-            foreach (Token tok in tokens) {
-                Console.WriteLine(tok.toString());
-            }
+            //foreach (Token tok in tokens) {
+            //    Console.WriteLine(tok.toString());
+            //}
             
             Parser parser = new Parser(tokens);
-            Expr expr = parser.parse();
+            List<Stmt> statements = parser.parse();
             if (hadError) return;
-                
-            Console.WriteLine(new AstPrinter().print(expr));
+
+            Resolver resolver = new Resolver(interpreter);
+            resolver.resolve(statements);
+            if (hadError) return;
+
+            //new AstPrinter().print(expr);
+            interpreter.interpret(statements);
+        }
+
+        public static void runTimeError(RunTimeError err)
+        {
+            Console.WriteLine($"{err.Message}\n[Line {err.token.line}]");
+            hadRunTimeError = true;
         }
 
         public static void error(int line, string message) {

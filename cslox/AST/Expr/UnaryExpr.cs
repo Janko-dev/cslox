@@ -1,15 +1,15 @@
 namespace cslox.AST
 {
-    internal class Unary : Expr
+    internal class UnaryExpr : Expr
     {
         public Token op;
         public Expr right;
-        public Unary(Token op, Expr right)
+        public UnaryExpr(Token op, Expr right)
         {
             this.op = op;
             this.right = right;
         }
-        public override R Accept<R>(Visitor<R> visitor)
+        public override R Accept<R>(ExprVisitor<R> visitor)
         {
             return visitor.VisitUnaryExpr(this);
         }

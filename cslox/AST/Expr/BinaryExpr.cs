@@ -1,17 +1,17 @@
 namespace cslox.AST
 {
-    internal class Binary : Expr
+    internal class BinaryExpr : Expr
     {
         public Expr left;
         public Token op;
         public Expr right;
-        public Binary(Expr left, Token op, Expr right)
+        public BinaryExpr(Expr left, Token op, Expr right)
         {
             this.left = left;
             this.op = op;
             this.right = right;
         }
-        public override R Accept<R>(Visitor<R> visitor)
+        public override R Accept<R>(ExprVisitor<R> visitor)
         {
             return visitor.VisitBinaryExpr(this);
         }
